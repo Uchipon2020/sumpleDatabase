@@ -10,6 +10,8 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -34,22 +36,27 @@ public class MainActivity extends AppCompatActivity {
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CustomerModel customerModel;
                 try{
-                    CustomerModel customerModel = new CustomerModel(-1,et_name.getText().toString(),Integer.parseInt(et_age.getText().toString()),sw_activeCustomer.checkInputConnectionProxy(v));
+                    customerModel = new CustomerModel(-1,et_name.getText().toString(),Integer.parseInt(et_age.getText().toString()),sw_activeCustomer.checkInputConnectionProxy(v));
                     Toast.makeText(MainActivity.this,customerModel.toString(), Toast.LENGTH_SHORT).show();
                 }catch(Exception e){
                     Toast.makeText(MainActivity.this,"err",Toast.LENGTH_LONG).show();
+                    customerModel = new CustomerModel(-1,"err",0,false);
                 }
 
                 DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
 
-
+                boolean success = databaseHelper.addOne(customerModel);
+                Toast.makeText(MainActivity.this, "success"+success , Toast.LENGTH_SHORT).show();
             }
         });
 
         btn_viewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
+                List<CustomerModel> everyone = databaseHelper.getEveryone();
 
             }
         });
