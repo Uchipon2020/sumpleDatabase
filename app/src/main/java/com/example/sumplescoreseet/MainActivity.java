@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
     Switch sw_activeCustomer;
     ListView lv_customerList;
 
+
+    DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
+    ArrayAdapter customerArrayAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
         lv_customerList = findViewById(R.id.lv_customerList);
         et_name = findViewById(R.id.et_name);
         et_age = findViewById(R.id.et_age);
+        DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
+
+
+        ShowCustomersOnListView();
 
         //button listeners for the add and view all
         btn_add.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
                 boolean success = databaseHelper.addOne(customerModel);
                 Toast.makeText(MainActivity.this, "success"+success , Toast.LENGTH_SHORT).show();
+                ShowCustomersOnListView();
             }
         });
 
@@ -56,11 +67,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
-                List<CustomerModel> everyone = databaseHelper.getEveryone();
+
+                //List<CustomerModel> everyone = databaseHelper.getEveryone();
+                ShowCustomersOnListView();
 
             }
         });
 
 
+    }
+
+    private void ShowCustomersOnListView() {
+        customerArrayAdapter = new ArrayAdapter<CustomerModel>(MainActivity.this, android.R.layout.simple_list_item_1, databaseHelper.getEveryone());
+        lv_customerList.setAdapter(customerArrayAdapter);
     }
 }
