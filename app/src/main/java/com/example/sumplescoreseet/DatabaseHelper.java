@@ -48,14 +48,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long insert = db.insert(CUSTOMER_TABLE,null,cv);
         if (insert == -1){
             return false;
-        }else{
+        }else {
             return true;
         }
+
     }
+    public  boolean deleteOne(CustomerModel customerModel){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String queryString = "DELETE FROM " + CUSTOMER_TABLE + " WHERE " + COLUMN_ID + " = " + customerModel.getId();
+
+        Cursor cursor = db.rawQuery(queryString, null);
+        if(cursor.moveToFirst()){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
     public List<CustomerModel> getEveryone(){
         List<CustomerModel> returnList = new ArrayList<>();
 
-        String queryString = "SELECT * FROM " + CUSTOMER_TABLE;
+        String queryString = " SELECT * FROM " + CUSTOMER_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
         if(cursor.moveToFirst()){
